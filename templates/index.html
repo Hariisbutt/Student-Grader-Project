@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GradeGuard — Grade Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">GG</span>
+        <span class="logo-text">GradeGuard</span>
+      </div>
+      <p class="logo-tagline">Know exactly where you stand.</p>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- TAB BAR -->
+    <div class="tabs">
+      <button class="tab active" id="tab-grade" onclick="switchTab('grade')">
+        <span class="tab-num">01</span> Grade Calculator
+      </button>
+      <button class="tab" id="tab-whatif" onclick="switchTab('whatif')">
+        <span class="tab-num">02</span> What-If Solver
+      </button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PANEL 1 — GRADE CALCULATOR
+    ═══════════════════════════════════════════ -->
+    <div class="panel" id="panel-grade">
+
+      <div class="panel-intro">
+        <h1 class="panel-title">Course Grade <em>Calculator</em></h1>
+        <p class="panel-desc">Enter each grading category with its weight and raw scores (e.g. 34/34, 46/48). Supports drop-lowest and best-of-N policies.</p>
+      </div>
+
+      <!-- Course name -->
+      <div class="field-group">
+        <label class="field-label" for="course-name">Course Name</label>
+        <input type="text" id="course-name" class="inp" placeholder="e.g. CS515 Fundamentals of Computing"/>
+      </div>
+
+      <!-- Weight bar -->
+      <div class="weight-track-wrap">
+        <div class="weight-track-label">
+          <span>Category Weights</span>
+          <span class="weight-sum-tag" id="weight-tag">0 / 100%</span>
+        </div>
+        <div class="weight-track">
+          <div class="weight-fill" id="weight-fill"></div>
+        </div>
+      </div>
+
+      <!-- Category list -->
+      <div class="section-head">
+        <span class="section-title">Categories</span>
+        <button class="btn-add" onclick="addCategory()">+ Add Category</button>
+      </div>
+      <div id="category-list" class="category-list"></div>
+
+      <button class="btn-primary" onclick="calculateGrade()">
+        Calculate Grade →
+      </button>
+
+      <!-- Results -->
+      <div id="grade-result" class="result-block hidden"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PANEL 2 — WHAT-IF SOLVER
+    ═══════════════════════════════════════════ -->
+    <div class="panel hidden" id="panel-whatif">
+
+      <div class="panel-intro">
+        <h1 class="panel-title">What-If <em>Score Solver</em></h1>
+        <p class="panel-desc">Enter your current grades, set a target, and find out exactly what you need on the next assignment.</p>
+      </div>
+
+      <!-- Weight bar (whatif) -->
+      <div class="weight-track-wrap">
+        <div class="weight-track-label">
+          <span>Category Weights</span>
+          <span class="weight-sum-tag" id="wi-weight-tag">0 / 100%</span>
+        </div>
+        <div class="weight-track">
+          <div class="weight-fill" id="wi-weight-fill"></div>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <span class="section-title">Current Categories</span>
+        <button class="btn-add" onclick="addWiCategory()">+ Add Category</button>
+      </div>
+      <div id="wi-category-list" class="category-list"></div>
+
+      <div class="two-up">
+        <div class="field-group">
+          <label class="field-label" for="target-grade">Target Grade (%)</label>
+          <input type="number" id="target-grade" class="inp" placeholder="e.g. 90" min="0" max="100"/>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="future-weight">Future Assignment Weight (%)</label>
+          <input type="number" id="future-weight" class="inp" placeholder="e.g. 30" min="0" max="100"/>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="solveWhatIf()">
+        Solve What-If →
+      </button>
+
+      <div id="whatif-result" class="result-block hidden"></div>
+    </div>
+
+  </main>
+
+  <!-- ═══ SCORE ENTRY MODAL ═══════════════════════════════════ -->
+  <div class="modal-backdrop hidden" id="modal-backdrop">
+    <div class="modal" id="modal">
+      <div class="modal-hd">
+        <div>
+          <div class="modal-title" id="modal-title">Enter Scores</div>
+          <div class="modal-hint">Format: <strong>earned / max</strong> — e.g. 34/34 or 46/48</div>
+        </div>
+        <button class="modal-x" onclick="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-count-row">
+        <label class="field-label">Number of assignments</label>
+        <div class="count-controls">
+          <input type="number" class="inp inp-sm" id="modal-count" placeholder="10" min="1" max="200"/>
+          <button class="btn-set" onclick="genRows()">Set →</button>
+        </div>
+      </div>
+
+      <div class="score-rows" id="score-rows"></div>
+
+      <div class="modal-ft">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-primary btn-sm" onclick="saveScores()">Save Scores</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
